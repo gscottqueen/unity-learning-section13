@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,20 +10,29 @@ public enum HandType
   Right
 }
 
+
 public class Hand : MonoBehaviour
 {
 
   public HandType type = HandType.Left;
+
   public bool isHidden { get; private set; } = false;
 
   public InputAction trackedAction = null;
+
   bool m_isCurrentlyTracked = false;
 
   List<MeshRenderer> m_currentRenderers = new List<MeshRenderer>();
 
-    // Start is called before the first frame update
-    void Start()
+  Collider[] m_colliders = null;
+
+  public bool isCollisionEnabled { get; private set; } = false;
+
+  // Start is called before the first frame update
+  void Start()
     {
+        m_colliders = GetComponentsInChildren<Collider>().Where(childCollider => !childCollider.isTrigger).ToArray();
+    Debug.Log(m_colliders.Length);
         trackedAction.Enable();
         Hide();
     }
@@ -31,6 +41,7 @@ public class Hand : MonoBehaviour
     void Update()
     {
       float isTracked = trackedAction.ReadValue<float>();
+    Debug.Log(isTracked);
       if (isTracked == 1.0f && !m_isCurrentlyTracked)
       {
         m_isCurrentlyTracked = true;
@@ -41,7 +52,8 @@ public class Hand : MonoBehaviour
         m_isCurrentlyTracked = false;
         Hide();
       }
-    }
+    Debug.Log(m_isCurrentlyTracked);
+  }
 
   public void Show() {
     foreach (MeshRenderer renderer in m_currentRenderers)
@@ -49,6 +61,7 @@ public class Hand : MonoBehaviour
       renderer.enabled = true;
     }
     isHidden = false;
+    EnableCollisions(true);
   }
 
   public void Hide() {
@@ -62,6 +75,18 @@ public class Hand : MonoBehaviour
       }
       m_currentRenderers.Add(renderer);
       isHidden = true;
+      EnableCollisions(false);
+    }
+  }
+
+  public void EnableCollisions(bool enabled)
+  {
+    if (isCollisionEnabled == enabled) return;
+
+    isCollisionEnabled = enabled;
+    foreach (Collider collider in m_colliders)
+    {
+      collider.enabled = isCollisionEnabled;
     }
   }
 }
