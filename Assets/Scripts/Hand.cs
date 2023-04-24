@@ -48,7 +48,7 @@ public class Hand : MonoBehaviour
 
   private void OnDisable()
   {
-    interactor.onSelectEntered.AddListener(OnGrab);
+    interactor.selectEntered.AddListener(OnGrab);
     interactor.selectEntered.AddListener(OnRelease);
   }
 
