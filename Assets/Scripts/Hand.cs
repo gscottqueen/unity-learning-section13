@@ -40,7 +40,7 @@ public class Hand : MonoBehaviour
       }
   }
 
-private void OnEnable()
+  private void OnEnable()
   {
     interactor.selectEntered.AddListener(OnGrab);
     interactor.selectEntered.AddListener(OnRelease);
@@ -48,7 +48,7 @@ private void OnEnable()
 
   private void OnDisable()
   {
-    interactor.selectEntered.AddListener(OnGrab);
+    interactor.onSelectEntered.AddListener(OnGrab);
     interactor.selectEntered.AddListener(OnRelease);
   }
 
@@ -122,7 +122,6 @@ private void OnEnable()
         Hide();
       }
     }
-    throw new NotImplementedException();
   }
 
   void OnRelease(XRBaseInteractable releaseObject)
@@ -135,6 +134,5 @@ private void OnEnable()
               Show();
           }
       }
-    throw new NotImplementedException();
   }
 }
