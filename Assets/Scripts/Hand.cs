@@ -40,7 +40,7 @@ public class Hand : MonoBehaviour
       }
   }
 
-  private void OnEnable()
+/*  private void OnEnable()
   {
     interactor.selectEntered.AddListener(OnGrab);
     interactor.selectEntered.AddListener(OnRelease);
@@ -50,7 +50,7 @@ public class Hand : MonoBehaviour
   {
     interactor.selectEntered.AddListener(OnGrab);
     interactor.selectEntered.AddListener(OnRelease);
-  }
+  }*/
 
   // Start is called before the first frame update
   void Start()
