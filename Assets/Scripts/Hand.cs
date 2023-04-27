@@ -21,6 +21,12 @@ public class Hand : MonoBehaviour
 
   public InputAction trackedAction = null;
 
+  public InputAction gripAction  = null;
+
+  public Animator handAnimator = null;
+
+  int m_gripAmountParameter = 0;
+
   bool m_isCurrentlyTracked = false;
 
   List<Renderer> m_currentRenderers = new List<Renderer>();
@@ -57,26 +63,35 @@ public class Hand : MonoBehaviour
     {
         m_colliders = GetComponentsInChildren<Collider>().Where(childCollider => !childCollider.isTrigger).ToArray();
         trackedAction.Enable();
+        m_gripAmountParameter = Animator.StringToHash("GripAmount");
+        gripAction.Enable();
         Hide();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-      float isTracked = trackedAction.ReadValue<float>();
-      if (isTracked == 1.0f && !m_isCurrentlyTracked)
-      {
-        m_isCurrentlyTracked = true;
-        Show();
-      }
-      else if (isTracked == 0 && m_isCurrentlyTracked)
-      {
-        m_isCurrentlyTracked = false;
-        Hide();
-      }
+  void UpdateHandAnimation()
+  {
+    float gripAmount = gripAction.ReadValue<float>();
+    handAnimator.SetFloat(m_gripAmountParameter, gripAmount);
   }
 
-  public void Show() {
+  // Update is called once per frame
+  void Update()
+  {
+    float isTracked = trackedAction.ReadValue<float>();
+    if (isTracked == 1.0f && !m_isCurrentlyTracked)
+    {
+      m_isCurrentlyTracked = true;
+      Show();
+    }
+    else if (isTracked == 0 && m_isCurrentlyTracked)
+    {
+      m_isCurrentlyTracked = false;
+      Hide();
+    }
+    UpdateHandAnimation();
+  }
+
+  void Show() {
     foreach (Renderer renderer in m_currentRenderers)
     {
       renderer.enabled = true;
@@ -85,7 +100,7 @@ public class Hand : MonoBehaviour
     EnableCollisions(true);
   }
 
-  public void Hide() {
+  void Hide() {
     m_currentRenderers.Clear();
     Renderer[] renderers = GetComponentsInChildren<Renderer>();
     foreach(Renderer renderer in renderers)
@@ -100,7 +115,7 @@ public class Hand : MonoBehaviour
     }
   }
 
-  public void EnableCollisions(bool enabled)
+  void EnableCollisions(bool enabled)
   {
     if (isCollisionEnabled == enabled) return;
 
@@ -112,7 +127,7 @@ public class Hand : MonoBehaviour
   }
 
 
-  void OnGrab(XRBaseInteractable grabbedObject)
+  /*void OnGrab(XRBaseInteractable grabbedObject)
   {
     HandControl ctrl = grabbedObject.GetComponent<HandControl>();
     if (ctrl != null)
@@ -134,5 +149,5 @@ public class Hand : MonoBehaviour
               Show();
           }
       }
-  }
+  }*/
 }
