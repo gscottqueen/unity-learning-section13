@@ -10,7 +10,6 @@ public class DragEvent : UnityEvent<float> { }
 
 public class DragInteractable : XRBaseInteractable
 {
-
   public Transform startDragPosition = null; 
   public Transform endDragPosition = null;
 
